@@ -25,3 +25,23 @@ curl -X DELETE "http://localhost:8080/engine-rest/process-definition/key/<Proces
 ``` 
 
 Refer: https://camunda.com/blog/2022/03/qa-the-one-where-you-completely-delete-a-process-definition/
+
+
+
+
+In the enterprise edition, one can view audit logs in the ui
+![image-1](https://github.com/anushkadeshpande/camunda/assets/53345232/ef883fb9-4a9d-4a3c-90cc-9c5d4361761b)
+
+Since this option is not available for the community edition, we need to hit the REST API
+
+```
+http://localhost:8080/engine-rest/history/activity-instance?processInstanceId=9b5052bc-273f-11ef-ae24-e4a8dfe1fb38
+```
+
+The process history can be checked using this endpoint
+```
+http://localhost:8080/engine-rest/history/detail
+```
+
+Check <a href="https://docs.camunda.org/manual/7.16/reference/rest/history/?__hstc=218867270.31ff3025710d3b0217351f6eb10867f8.1718029690247.1718029690247.1718034111450.2&__hssc=218867270.1.1718034111450&__hsfp=486857294&_gl=1*1edhuwc*_ga*MTY0MTU2MzYxMi4xNzE4MDI3MDQ1*_ga_4EYN8X5FNR*MTcxODA0NTU1MC40LjAuMTcxODA0NTU1MC42MC4wLjA">this</a> for more endpoints related to history.
+
