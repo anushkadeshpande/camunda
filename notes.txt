@@ -1,0 +1,29 @@
+	1. Enterprise version
+	2. Community version
+
+
+All deployments are persisted in h2 database
+
+
+
+tasklist: where users can start processes
+cockpit: admins can maintain processes -- migrations (enterprise feature) and monitoring
+modeler: tool to build models
+engine: deploy the models 
+
+
+
+build with modeler -> deployed on engine  -->  start with tasklist  --> manipulate it and see it running in cockpit
+
+
+
+	- allows to create workflows
+	- workflow automation, manages entire lifecycle
+	- decision management
+	- integration
+	- can assign tasks to users and and track progress and manage interaction
+	
+	
+	1. BPMN
+	2. DMN
+	3. CMMN
