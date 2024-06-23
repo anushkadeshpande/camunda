@@ -1,0 +1,24 @@
+{
+  "candies": [
+    {
+      "id": 123,
+      "candies": ["M&M", "Cadbury", "Gems"]
+    },
+    {
+      "id": 456,
+      "candies": ["Perk", "M&M"]
+    },
+    {
+      "id": 789,
+      "candies": []
+    },
+    {
+      "id": 3112,
+      "candies": ["Munch", "Bournville"]
+    },
+    {
+      "id": 1209,
+      "candies": ["5Star", "Milky Bar"]
+    }
+  ]
+}
