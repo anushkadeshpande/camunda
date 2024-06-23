@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0u09fc8" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.23.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.21.0">
+  <bpmn:process id="NumberOfCandies" isExecutable="true" camunda:historyTimeToLive="1000">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_1obhjrd</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Activity_0qwfpcd" name="GetUserId">
+      <bpmn:extensionElements>
+        <camunda:connector>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="url">http://localhost:8756/getUserId</camunda:inputParameter>
+            <camunda:inputParameter name="method">POST</camunda:inputParameter>
+            <camunda:inputParameter name="payload">${userIdPayload}</camunda:inputParameter>
+            <camunda:inputParameter name="headers">
+              <camunda:map>
+                <camunda:entry key="Content-Type">application/json</camunda:entry>
+              </camunda:map>
+            </camunda:inputParameter>
+            <camunda:outputParameter name="user_id">${S(response).prop('id').value()}</camunda:outputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>http-connector</camunda:connectorId>
+        </camunda:connector>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="get_user_id_payload">${userIdPayload}</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1obhjrd</bpmn:incoming>
+      <bpmn:outgoing>Flow_0tmggvj</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1obhjrd" sourceRef="StartEvent_1" targetRef="Activity_0qwfpcd" />
+    <bpmn:exclusiveGateway id="Gateway_1bo8inb">
+      <bpmn:incoming>Flow_0tmggvj</bpmn:incoming>
+      <bpmn:outgoing>Flow_1oj5iwc</bpmn:outgoing>
+      <bpmn:outgoing>Flow_123xt3v</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0tmggvj" sourceRef="Activity_0qwfpcd" targetRef="Gateway_1bo8inb" />
+    <bpmn:endEvent id="Event_011706y">
+      <bpmn:incoming>Flow_1oj5iwc</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1oj5iwc" name="user id is null" sourceRef="Gateway_1bo8inb" targetRef="Event_011706y">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${user_id == null }</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_123xt3v" name="User id is not null" sourceRef="Gateway_1bo8inb" targetRef="Activity_0itv83w">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${user_id != null }</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="Activity_0itv83w" name="GetFavCandies">
+      <bpmn:extensionElements>
+        <camunda:connector>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="url">http://localhost:8756/getFavCandies</camunda:inputParameter>
+            <camunda:inputParameter name="payload">{"userId": ${user_id}}</camunda:inputParameter>
+            <camunda:inputParameter name="method">POST</camunda:inputParameter>
+            <camunda:inputParameter name="headers">
+              <camunda:map>
+                <camunda:entry key="Content-Type">application/json</camunda:entry>
+              </camunda:map>
+            </camunda:inputParameter>
+            <camunda:outputParameter name="favCandiesResponse">${response}</camunda:outputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>http-connector</camunda:connectorId>
+        </camunda:connector>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="user_id">${user_id}</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_123xt3v</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ga417d</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1ga417d" sourceRef="Activity_0itv83w" targetRef="Activity_03u07ad" />
+    <bpmn:scriptTask id="Activity_03u07ad" name="GetNumberOfCandies" scriptFormat="JavaScript" camunda:resultVariable="numberOfCandies">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="favCandiesResponse">${favCandiesResponse}</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1ga417d</bpmn:incoming>
+      <bpmn:outgoing>Flow_1fl4li6</bpmn:outgoing>
+      <bpmn:script>var jsonString = execution.getVariable('favCandiesResponse');
+
+try {
+  var jsonArray = JSON.parse(jsonString);
+execution.setVariable('numberOfCandies', jsonArray.length);
+} catch (error) {
+  execution.setVariable('errorMessage', 'Error parsing JSON: ' + error.message);
+}</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:exclusiveGateway id="Gateway_1vywfac">
+      <bpmn:incoming>Flow_1fl4li6</bpmn:incoming>
+      <bpmn:outgoing>Flow_1t2wtl5</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0i5u4eh</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1fl4li6" sourceRef="Activity_03u07ad" targetRef="Gateway_1vywfac" />
+    <bpmn:endEvent id="Event_0m9kat2">
+      <bpmn:incoming>Flow_0i5u4eh</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1t2wtl5" name="number of candies is even" sourceRef="Gateway_1vywfac" targetRef="Activity_10naeng">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{numberOfCandies % 2 == 0}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="Activity_10naeng" name="callFinalAPI">
+      <bpmn:extensionElements>
+        <camunda:connector>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="url">http://localhost:8756</camunda:inputParameter>
+            <camunda:inputParameter name="method">GET</camunda:inputParameter>
+            <camunda:inputParameter name="headers">
+              <camunda:map>
+                <camunda:entry key="Content-Type">applicaation/json</camunda:entry>
+              </camunda:map>
+            </camunda:inputParameter>
+            <camunda:outputParameter name="finalResponse">${response}</camunda:outputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>http-connector</camunda:connectorId>
+        </camunda:connector>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1t2wtl5</bpmn:incoming>
+      <bpmn:outgoing>Flow_1pb4cea</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0i5u4eh" name="number of candies is odd" sourceRef="Gateway_1vywfac" targetRef="Event_0m9kat2">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{numberOfCandies %2 != 0}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1pb4cea" sourceRef="Activity_10naeng" targetRef="Activity_1blbs4j" />
+    <bpmn:userTask id="Activity_1blbs4j" name="Show Output">
+      <bpmn:incoming>Flow_1pb4cea</bpmn:incoming>
+      <bpmn:outgoing>Flow_0eunhk8</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="Event_19txdpj">
+      <bpmn:incoming>Flow_0eunhk8</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0eunhk8" sourceRef="Activity_1blbs4j" targetRef="Event_19txdpj" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="NumberOfCandies">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="199" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0b06ike_di" bpmnElement="Activity_0qwfpcd">
+        <dc:Bounds x="290" y="177" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1bo8inb_di" bpmnElement="Gateway_1bo8inb" isMarkerVisible="true">
+        <dc:Bounds x="465" y="192" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_011706y_di" bpmnElement="Event_011706y">
+        <dc:Bounds x="472" y="82" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1b1uybl_di" bpmnElement="Activity_0itv83w">
+        <dc:Bounds x="630" y="177" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1vbgwfd_di" bpmnElement="Activity_03u07ad">
+        <dc:Bounds x="780" y="177" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1vywfac_di" bpmnElement="Gateway_1vywfac" isMarkerVisible="true">
+        <dc:Bounds x="915" y="192" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0m9kat2_di" bpmnElement="Event_0m9kat2">
+        <dc:Bounds x="922" y="332" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1euzmf4_di" bpmnElement="Activity_10naeng">
+        <dc:Bounds x="1060" y="177" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1tloltj_di" bpmnElement="Activity_1blbs4j">
+        <dc:Bounds x="1260" y="177" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_19txdpj_di" bpmnElement="Event_19txdpj">
+        <dc:Bounds x="1462" y="199" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1obhjrd_di" bpmnElement="Flow_1obhjrd">
+        <di:waypoint x="215" y="217" />
+        <di:waypoint x="290" y="217" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0tmggvj_di" bpmnElement="Flow_0tmggvj">
+        <di:waypoint x="390" y="217" />
+        <di:waypoint x="465" y="217" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1oj5iwc_di" bpmnElement="Flow_1oj5iwc">
+        <di:waypoint x="490" y="192" />
+        <di:waypoint x="490" y="118" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="497" y="152" width="65" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_123xt3v_di" bpmnElement="Flow_123xt3v">
+        <di:waypoint x="515" y="217" />
+        <di:waypoint x="630" y="217" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="530" y="199" width="85" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ga417d_di" bpmnElement="Flow_1ga417d">
+        <di:waypoint x="730" y="217" />
+        <di:waypoint x="780" y="217" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1fl4li6_di" bpmnElement="Flow_1fl4li6">
+        <di:waypoint x="880" y="217" />
+        <di:waypoint x="915" y="217" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0i5u4eh_di" bpmnElement="Flow_0i5u4eh">
+        <di:waypoint x="940" y="242" />
+        <di:waypoint x="940" y="332" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="944" y="276" width="71" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1t2wtl5_di" bpmnElement="Flow_1t2wtl5">
+        <di:waypoint x="965" y="217" />
+        <di:waypoint x="1060" y="217" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="969" y="176" width="77" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1pb4cea_di" bpmnElement="Flow_1pb4cea">
+        <di:waypoint x="1160" y="217" />
+        <di:waypoint x="1260" y="217" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0eunhk8_di" bpmnElement="Flow_0eunhk8">
+        <di:waypoint x="1360" y="217" />
+        <di:waypoint x="1462" y="217" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
