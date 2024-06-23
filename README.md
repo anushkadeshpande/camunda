@@ -45,3 +45,19 @@ http://localhost:8080/engine-rest/history/detail
 
 Check <a href="https://docs.camunda.org/manual/7.16/reference/rest/history/?__hstc=218867270.31ff3025710d3b0217351f6eb10867f8.1718029690247.1718029690247.1718034111450.2&__hssc=218867270.1.1718034111450&__hsfp=486857294&_gl=1*1edhuwc*_ga*MTY0MTU2MzYxMi4xNzE4MDI3MDQ1*_ga_4EYN8X5FNR*MTcxODA0NTU1MC40LjAuMTcxODA0NTU1MC42MC4wLjA">this</a> for more endpoints related to history.
 
+<hr>
+
+
+### H2 Database:
+
+Camunda 7 by default uses h2 database. The db console can be accessed using this link
+```
+http://localhost:8080/h2/h2
+```
+
+Enter the JDBC URL as:
+```
+dbc:h2:./camunda-h2-dbs/process-engine;TRACE_LEVEL_FILE=0;DB_CLOSE_ON_EXIT=FALSE
+```
+
+And the default username and password are : `sa/sa`
