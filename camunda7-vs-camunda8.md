@@ -2,6 +2,7 @@
 
 Refer https://docs.camunda.io/docs/guides/migrating-from-camunda-7/
 
+
 ## Differences
 
 ### Embedded Engine
@@ -63,3 +64,9 @@ Camunda 7 stored all data like instance variables, history, etc in a relational 
 
 
 > Check this for diagram conversion from Camunda 7 to Camunda 8 https://github.com/camunda-community-hub/camunda-7-to-8-migration/tree/main/backend-diagram-converter
+
+
+
+Also, check this blog https://medium.com/@shashikumar403/camunda-8-v-s-camunda-7-dbf7b0b92fc0
+
+For more examples, explore the repositories here https://github.com/berndruecker?tab=repositories
