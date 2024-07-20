@@ -1,0 +1,23 @@
+{
+  "components": [
+    {
+      "label": "get_user_id_payload",
+      "type": "textarea",
+      "layout": {
+        "row": "Row_166las9",
+        "columns": null
+      },
+      "id": "Field_06ilf9t",
+      "key": "get_user_id_payload"
+    }
+  ],
+  "type": "default",
+  "id": "Form_026xf5a",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.5.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.23.0"
+  },
+  "schemaVersion": 16
+}
